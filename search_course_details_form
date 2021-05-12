@@ -1,0 +1,37 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do
+ echo -e "\t\t\033[4mSearch Course Details Form\033[0m"
+ echo -en "Enter Course Code: "; read code
+ IFS=":"
+  while read coursecode coursename hours
+  do 
+   if [ "$coursecode" == "$code" ]
+    then
+     cname="$coursename"
+     echo
+     echo -e "Course Name\t: $coursename "
+     echo
+     echo -e "Credit Hours\t: $hours"
+   fi
+  done < course.txt  
+  
+ if [ -z "$cname" ]
+  then
+  echo
+  echo "Invalid Code" 
+ fi
+ echo
+ echo
+ echo "Press (q) to return to College Management Menu"
+ echo
+ echo -n "Search Another Course? (y)es or (q)uit: "; read choice
+ if [ "$choice" != "y" -a "$choice" != "Y" ]
+   then
+    clear; exit
+   else
+    echo
+  fi
+done

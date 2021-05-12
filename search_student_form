@@ -1,0 +1,37 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do 
+ echo -e "\t\t\033[4mSearch Student Details Form\033[0m" 
+ echo -en "\tEnter Student ID: "; read stuid
+ echo
+ IFS=":"
+  while read programme ID name date number address
+  do 
+   if [ "$ID" == "$stuid" ]
+   then
+   stuname="$name"
+   echo -e "Student Name\t: $name"
+   echo
+   echo -e "Contact Number\t: $number"
+   echo
+   echo -e "Mailing Address\t: $address"
+   fi
+  done < student.txt  
+  
+ if [ -z "$stuname" ]
+  then
+  echo "Invalid ID" 
+ fi
+ echo
+ echo "Press (q) to return to College Management Menu"
+ echo
+ echo -n "Search Another Student? (y)es or (q)uit: "; read choice
+ if [ "$choice" != "y" -a "$choice" != "Y" ]
+  then
+   clear; exit
+  else
+   echo
+ fi
+done

@@ -1,0 +1,26 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do
+ echo "College Management Menu"
+ echo "======================="
+ echo "1 -Add New Students"
+ echo "2 -Add New Courses"
+ echo "3 -Grade Students"
+ echo "4 -Search Student Details"
+ echo "5 -Search Course Details"
+ echo
+ echo "Q-Quit (exit from program)"
+ echo 
+ echo -n "Please select a choice: "; read choice
+ case "$choice" in
+ [1]) clear; ./programme_selections_menu;;
+ [2]) clear; ./new_course_form;;
+ [3]) clear; ./stugrade;;
+ [4]) clear; ./search_student_form;;
+ [5]) clear; ./search_course_details_form;;
+ [Qq]) clear; exit;;
+ *) clear; echo "Invalid Input! Please Enter A Valid Input."; echo
+ esac
+done

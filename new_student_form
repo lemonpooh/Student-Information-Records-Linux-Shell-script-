@@ -1,0 +1,70 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do
+ minnumber=10
+ maxnumber=10
+ echo "Add New Student Form"
+ echo "===================="
+ echo 
+ echo -en "Student ID\t\t: "; read ID
+ echo -en "Student Name\t\t: "; read name
+ echo -en "Birth Date (DD/MM/YYYY)\t: "; read date
+ echo -en "Contact Number\t\t: "; read number
+ echo -en "Mailing Address\t\t: "; read address
+ IFS=":"
+  while read stuprogramme stuid stuname studate stunumber stuaddress
+  do 
+   if [ "$stuid" == "$ID" ]
+    then
+     studentID="valid"
+     break
+    else 
+     studentID="invalid"
+   fi
+  done < student.txt
+  
+ if [ "$studentID" == "valid" ]
+  then
+  echo
+  echo "ID Has Been Used"
+ elif ! [[ "$name" =~ ^[a-zA-Z]+$ ]]
+  then
+   echo "Please Enter Alphabet Only For Name"
+ elif [[ "$date" =~ ^[a-zA-Z]+$ && "$number" =~ ^[a-zA-Z]+$ ]]
+  then
+   echo "Please Enter Integer Only For Birth Date and Contact Number"
+ elif [ ${#number} -lt 11 ]
+  then
+   echo "The length of contact number is too short"  
+ elif [ ${#number} -gt 11 ]
+  then
+   echo "The length of contact number is too long"
+ elif  [[ "$address" == *['!'@#\$%^\&*()_+]* ]]
+  then
+   echo "Please Enter Alphabets and number Only For Address"
+ elif [ "$studentID" == "invalid" -a -n "$ID" -a -n "$name" -a -n "$date" -a -n "$number" -a -n "$address" ]
+  then
+  echo "$programme:$ID:$name:$date:$number:$address" >> student.txt
+  echo
+  echo "Register Complete!"
+ else [ "$studentID" == "invalid" -a -z "$ID" -a -z "$name" -a -z "$date" -a -z "$number" -a -z "$address" ]
+  echo
+  echo "Incomplete Input"
+ 
+ fi
+ 
+ echo
+ echo "Press (q) to return to College Management Menu"
+ echo
+ echo -n "Add Another Student? (y)es or (q)uit: "; read choice
+ echo
+ if [ "$choice" != "y" -a "$choice" != "Y" ] 
+  then
+   clear; exit
+  else
+   echo
+ fi
+done	
+	

@@ -1,0 +1,316 @@
+#! /bin/bash
+
+# GOH KAH POOI 2000716
+
+##############################################################################################################
+plus=0 #----for storing data into file purpose-------
+score(){
+
+	i=1
+	while (( $i==1 ))
+	do
+	
+	echo
+	echo -n "Please enter the marks obtained: "; read marks[$plus]
+
+	
+		if [ ${marks[$plus]} -ge 80 -a ${marks[$plus]} -le 100 ]
+		then
+	
+		grade[$plus]='A'
+		gpa=4.0000
+		remarks[$plus]="Excellent"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 75 -a ${marks[$plus]} -le 79 ]
+		then
+	
+		grade[$plus]='A-'
+		gpa=3.7500
+		remarks[$plus]="Excellent"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 70 -a ${marks[$plus]} -le 74 ]
+		then
+	
+		grade[$plus]='B+'
+		gpa=3.5000
+		remarks[$plus]="Good"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 65 -a ${marks[$plus]} -le 69 ]
+		then
+	
+		grade[$plus]='B+'
+		gpa=3.0000
+		remarks[$plus]="Good"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 60 -a ${marks[$plus]} -le 64 ]
+		then
+	
+		grade[$plus]='B-'
+		gpa=2.7500
+		remarks[$plus]="Pass"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 55 -a ${marks[$plus]} -le 59 ]
+		then
+		
+		grade[$plus]='C+'
+		gpa=2.5000
+		remarks[$plus]="Pass"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 50 -a ${marks[$plus]} -le 54 ]
+		then
+	
+		grade[$plus]='C'
+		gpa=2.0000
+		remarks[$plus]="Pass"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		elif [ ${marks[$plus]} -ge 0 -a ${marks[$plus]} -le 49 ]
+		then
+	
+		grade[$plus]='F'
+		gpa=0.0000
+		remarks[$plus]="Failed"
+		point[$plus]=$(echo "scale=2; $gpa*$creditcheck" | bc)
+		i=0
+	
+		else
+		echo "Invalid Marks Range!"
+		
+		fi
+	 done	
+}
+
+
+##############################################################################################
+#-------------------- Write into the file------------------------------------
+
+writefile()
+{
+		score		
+		#--------------- write into file ------------------- 
+		if [ $plus == 0 ]
+		then 
+				echo
+				echo -n "Academic Year(yyyy): ";read year
+				echo
+				echo -n "Semester (1/2/3): ";read sem
+	
+				#------------- write into file -------------------
+		
+				echo "Student ID   : $stuid" >> $stuid"Result".txt
+				echo >> $stuid"Result".txt
+				echo "Student Name : $stuname" >> $stuid"Result".txt
+				echo >> $stuid"Result".txt
+				echo "Academic Year: $year" >> $stuid"Result".txt
+				echo >> $stuid"Result".txt
+				echo "Semester     : $sem" >> $stuid"Result".txt
+				echo >> $stuid"Result".txt 
+				echo >> $stuid"Result".txt 
+				echo >> $stuid"Result".txt "=================================================================================" >> $stuid"Result".txt
+				echo "Course Code:     Marks Obtained:    Grade Obtained:   Remark:     Quality Point:" >>$stuid"Result".txt
+				echo >> $stuid"Result".txt "=================================================================================" >> $stuid"Result".txt
+				echo >> $stuid"Result".txt		
+						 
+			fi
+		
+			#-------------- append file -------------------------- 
+	 		#%f - float format specifier used for float data type
+	 		#%f to set a specific precision point
+	 		#%s - string format specifier - alignment used
+	 	
+			printf "%-18s" ${realcode[$plus]} >> $stuid"Result".txt
+			printf "%-19s" ${marks[$plus]} >> $stuid"Result".txt
+			printf "%-18s" ${grade[$plus]} >> $stuid"Result".txt
+			printf "%-13s" ${remarks[$plus]} >> $stuid"Result".txt
+			printf "%0.2f\n" ${point[$plus]} >> $stuid"Result".txt		 
+			printf "\n\n" >> $stuid"Result".txt
+			
+			
+			echo "${realcode[$plus]}:${marks[$plus]}:${grade[$plus]}:${remarks[$plus]}:${point[$plus]}" >> $stuid"Resultcheck".txt    
+			
+		#----------------- user choice making --------------------
+		
+			echo
+			echo -n "Press (y) to continue to enter MORE student’s marks or (b) to back previous : "; read opt
+	
+			if [ $opt != 'Y' ] && [ $opt != 'y' ]
+			then
+			
+			
+				#-----------------append file total grade point---------------
+				#---------------calculate total grade point-------------------
+				total=0
+				for((i=0;i<=$plus;i++))
+				do
+				total=`echo "scale=4; $total+${point[$i]} " | bc -l`
+				done
+			
+				printf "\t\t\t\t\t    " >>  $stuid"Result".txt	 
+				printf "Total Quality Points:" >>  $stuid"Result".txt	
+				printf "   %0.2f\n" $total >>  $stuid"Result".txt	 			
+		
+				echo "`clear`"
+				
+				#------------------ read all file ---------------------
+				cat < $stuid"Result".txt 
+				q=0 ;  
+			fi
+				plus=$(($plus+1))
+				
+
+}
+
+
+
+################################################################################################################
+#--------------- stu enter mark func ----------------------#
+entermark() {
+
+echo "`clear`"
+
+#-------- enter course code -----------------------
+	q=1
+	while (( $q == 1 ))
+	do
+		echo "`clear`"
+		echo -n "please enter the course code: "; read code
+	
+	#---------------- read course file --------------------
+	IFS=":"
+		while read -a arr
+		do 
+	
+		if [ ${arr[0]} == "$code" ]
+		then
+		codecheck[$plus]=1
+		realcode[$plus]="$code"
+		creditcheck[$plus]="${arr[2]}"
+		break
+		else
+		codecheck[$plus]=0
+		fi
+	 	done < course.txt   
+	
+	
+	#---------- if code does not exist --------------------
+	if [  ${codecheck[$plus]} != 1 ]
+	then
+	echo "No such code ! Please enter again!"
+	sleep 2
+	
+	#---------- if code exist --------------------
+	else
+		
+		#--------check if code same ------------
+		#------if the check file exist----------
+		if [ -f $stuid"Resultcheck".txt ]
+		then
+		
+			IFS=":"
+			while read -a arr
+			do  
+				if [ ${arr[0]} == "$code" ]
+				then
+				
+				echo
+				echo "You have enter a same course code! Please enter the code again."
+				sleep 3
+				echo
+				codeenteragain=1
+				break
+				
+				else
+				codeenteragain=0
+				 
+				fi
+	 		done < $stuid"Resultcheck".txt    
+	 		
+	 		if [ $codeenteragain == 0 ]
+	 		then 
+	 		
+	 		writefile
+	 		 
+	 		fi
+	 		
+	 	#------if the checkfile not exist----------	
+	 	else
+	 		writefile
+	 		
+		fi
+	
+		
+	fi		
+	done
+}
+
+
+
+#***********************************************main start*************************************************************#
+
+echo "`clear`"
+i=1
+while (( $i == 1))
+do
+
+echo -n "Please enter the student's ID Number: "; read stuid
+
+#----------------read file from ID -----------------
+	IFS=":"
+	while read -a arr
+	do 
+		if [ "${arr[1]}" == "$stuid" ]
+		then
+		stuname="${arr[2]}"
+		echo
+		echo "Student Name: ${arr[2]}"
+		echo
+		echo "Programme   : ${arr[0]}"
+		fi
+	 done < student.txt  
+
+#----------------- user choice making --------------------
+	if [ -z $stuname ]
+	then
+	echo "NO such ID! Please enter again"
+	sleep 3
+			
+	else
+	j=1
+		while [ $j -eq 1 ]
+		do 
+		echo 
+		echo -n "Press (n) to continue to enter the student's marks or (q) to quit from the prompt: "; read choice
+		
+			case "$choice" in
+			[nN]) entermark;;
+			[qQ]) j=0;i=0;;
+			*) echo "please enter a correct input value !"
+			esac
+		done
+	fi
+done
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,59 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do
+min=1
+max=12
+ echo -e "\t\tAdd New Course Form"
+ echo -e "\t\t==================="
+ echo
+ echo -en "Course Code\t\t: "; read code
+ echo -en "Course Name\t\t: "; read name 
+ echo -en "Credit Hours(1-12)\t: "; read hours
+ IFS=":"
+  while read coursecode coursename time
+  do 
+   if [ "$coursecode" == "$code" ]
+    then
+     ccode="valid"
+     break
+    else
+     ccode="invalid"
+   fi
+  done < course.txt  
+  
+ if [ "$ccode" == "valid" ]
+  then
+  echo
+  echo "Code Has Been Used" 
+ elif ! [[ "$hours" =~ ^[0-9]+$ ]]
+  then
+   echo "Please Enter Integer Only For Credit Hours"
+ elif [ $hours -lt $min ]
+  then
+   echo "Invalid hours"
+ elif [ $hours -gt $max ]
+  then 
+   echo "Invalid hours"
+ elif [ "$ccode" == "invalid" -a -n "$code" -a -n "$name" -a -n "$hours" ]
+  then
+   echo "$code:$name:$hours" >> course.txt
+   echo
+   echo "Complete!"
+ else [ "$ccode" == "invalid" -a -z "$code" -a -z "$name" -a -z "$hours" ]
+   echo
+   echo "Incomplete Input" 
+ fi
+ echo
+ echo "Press (q) to return to College Management Menu"
+ echo
+ echo -n "Add Another Course? (y)es or (q)uit: "; read choice
+ echo
+ if [ "$choice" != "y" -a "$choice" != "Y" ]
+  then
+   clear; exit
+  else 
+   echo
+ fi
+done

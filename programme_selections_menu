@@ -1,0 +1,39 @@
+
+#!/bin/bash
+looping=yes
+while [ "$looping" = "yes" ]
+do 
+ echo "Programme Selections Menu"
+ echo "========================="
+ echo
+ echo "T-RIT(Bachelor in Information Technology)"
+ echo "D-RSD(Bachelor in Software Development)"
+ echo "S-RST(Bachelor in Interactive Software Technology)"
+ echo "E-REI(Bachelor in Enterprise Informaiton System)"
+ echo "F-RSF(Bachelor in Software Engineering)"
+ echo
+ echo "Q-Quit (Return to College Management Menu)"
+ echo
+ echo -n "Please select a choice: "; read choice
+ case "$choice" in
+ [Tt]) programme="RIT";;
+ [Dd]) programme="RSD";;
+ [Ss]) programme="RST";;
+ [Ee]) programme="REI";;
+ [Ff]) programme="RSF";;
+ [Qq]) clear; exit;;
+ *) programme="invalid";;
+ esac
+ export programme
+ if [ "$programme" != "invalid" ]
+  then
+   clear;./new_student_form; exit
+  else
+  clear
+  echo "Invalid option!"
+  echo "Please Choose Again"
+  echo
+ fi
+done
+done
+
